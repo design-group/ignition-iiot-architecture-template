@@ -1,10 +1,12 @@
-# Ignition Docker Project Template
+# IIOT Docker Project Template
 
 ___
 
 ## Prerequisite
 
 Understand the process of creating docker containers using the [docker-image](https://github.com/design-group/ignition-docker).
+
+This project assumes you have a local Traefik reverse proxy running, if not, you can set one up using this repository [traefik-proxy](https://github.com/design-group/traefik-proxy)
 
 ___
 
@@ -16,7 +18,7 @@ ___
     ```sh
     mkdir <project-name>
     cd <project-name>
-    git clone https://github.com/design-group/ignition-project-template.git .
+    git clone https://github.com/design-group/iiot-docker-project-template.git .
     ```
 
 3. Rename the vscode workspace file to match your project name.
@@ -35,21 +37,13 @@ ___
 	COMPOSE_PROJECT_NAME=<project-name>
 	```
 
-	or if you are using trafik as a reverse proxy, set the `.env` file to:
+7. If mounting the `workdir` volume on a non-MacOS device, make sure to create the directory first so that it is owned by the user running the container.
 
 	```sh
-	COMPOSE_PATH_SEPARATOR=:
-	COMPOSE_FILE=docker-compose.yml:docker-compose.traefik.yml
-	COMPOSE_PROJECT_NAME=<project-name>
+	mkdir subscriber-data publisher-data
 	```
 
-8. If mounting the `workdir` volume on a non-MacOS device, make sure to create the directory first so that it is owned by the user running the container.
-
-	```sh
-	mkdir ignition-data
-	```
-
-9. Pull any changes to the docker image and start the container.
+8. Pull any changes to the docker image and start the container.
       
     On Mac:
     
@@ -63,9 +57,10 @@ ___
     docker-compose pull && docker-compose up -d
     ```
 
-10. In a web browser, access the gateway at `http://localhost/` (No port is required, since the template is using port 80)
-
-11. If using trafik as a proxy, access the gateway at `http://<project-name>.localtest.me`
+9. In a web browser, access the different gateways at the following ports:	
+	- Subscriber (Engine): `http://localhost:80`
+	- Publisher (Transmission): `http://localhost:81`
+	- Broker (Distributor): `http://localhost:82` 
 
 ___
 
@@ -79,4 +74,4 @@ bash download-gateway-backups.sh
 
 The backups are stored in the `backups` directory, and if configured in the compose file will automatically restore when the container is initially created. 
 
-If you are preparing this repository for another user, after configuration of the gateway is complete, run the above backup command, and then uncomment the volume and command listed in the `docker-compose.yml` file.
+This repository includes the gateway backups necessary to auto-configure MQTT between the different gateways. Each backup only contains what is necessary to setup a transmitter from the `MQTT Tags` folder, and publish it through the broker and make it visible to the engine.

@@ -1,17 +1,48 @@
 services:
-  gateway:
+  subscriber:
     healthcheck:
       disable: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.ignition-template.entrypoints: "web"
-      traefik.http.routers.ignition-template.rule: "Host(`ignition-template.localtest.me`)"
-      traefik.http.services.ignition-template.loadbalancer.server.port: "8088"
+      traefik.http.routers.subscriber-template.entrypoints: "web"
+      traefik.http.routers.subscriber-template.rule: "Host(`subscriber-template.localtest.me`)"
+      traefik.http.services.subscriber-template.loadbalancer.server.port: "8088"
     environment:
-      GATEWAY_SYSTEM_NAME: ignition-template
+      GATEWAY_SYSTEM_NAME: subscriber-template
       GATEWAY_PUBLIC_HTTP_PORT: 80
       GATEWAY_PUBLIC_HTTPS_PORT: 443
-      GATEWAY_PUBLIC_ADDRESS: ignition-template.localtest.me
+      GATEWAY_PUBLIC_ADDRESS: subscriber-template.localtest.me
+    networks:
+      - default
+      - proxy
+
+  publisher:
+    healthcheck:
+      disable: true
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.publisher-template.entrypoints: "web"
+      traefik.http.routers.publisher-template.rule: "Host(`publisher-template.localtest.me`)"
+      traefik.http.services.publisher-template.loadbalancer.server.port: "8088"
+    environment:
+      GATEWAY_SYSTEM_NAME: publisher-template
+      GATEWAY_PUBLIC_HTTP_PORT: 80
+      GATEWAY_PUBLIC_HTTPS_PORT: 443
+      GATEWAY_PUBLIC_ADDRESS: publisher-template.localtest.me
+    networks:
+      - default
+      - proxy
+
+  broker:
+    healthcheck:
+      disable: true
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.broker-template.entrypoints: "web"
+      traefik.http.routers.broker-template.rule: "Host(`broker-template.localtest.me`)"
+      traefik.http.services.broker-template.loadbalancer.server.port: "1883"
+    environment:
+      GATEWAY_SYSTEM_NAME: broker-template
     networks:
       - default
       - proxy

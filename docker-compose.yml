@@ -1,14 +1,55 @@
 services:
-  gateway:
-    image: bwdesigngroup/ignition-docker:latest
-    hostname: gateway
+  subscriber:
+    image: bwdesigngroup/ignition-docker-iiot
+    hostname: subscriber
     ports:
       - 8088
     volumes:
-      - ./ignition-data:/workdir
-      - ./backups/gateway.gwbk:/restore.gwbk
+      - ./subscriber-data:/workdir
+      - ./backups:/backups
     environment:
       - SYMLINK_GITIGNORE=false
       - SYMLINK_LOGBACK=false
+      - IIOT_MODULES_ENABLED=mqtt-engine
     command: >
-      -r /restore.gwbk
+        -r /backups/subscriber.gwbk
+        -a subscriber.localtest.me
+        -h 8088
+        -s 8043
+
+  broker:
+    image: bwdesigngroup/ignition-docker-iiot
+    hostname: broker
+    ports:
+      - 8088
+      - 1883:1883
+    volumes:
+        - ./backups:/backups
+    environment:
+      - SYMLINK_GITIGNORE=false
+      - SYMLINK_LOGBACK=false
+      - IIOT_MODULES_ENABLED=mqtt-distributor
+    command: >
+        -r /backups/broker.gwbk
+        -a broker.localtest.me
+        -h 8088
+        -s 8043
+
+  publisher:
+    image: bwdesigngroup/ignition-docker-iiot
+    hostname: publisher
+    ports:
+      - 8088
+    volumes:
+      - ./publisher-data:/workdir
+      - ./backups:/backups
+    environment:
+      - SYMLINK_GITIGNORE=false
+      - SYMLINK_LOGBACK=false
+      - SYMLINK_THEMES=false
+      - IIOT_MODULES_ENABLED=mqtt-transmission
+    command: >
+        -r /backups/publisher.gwbk
+        -a publisher.localtest.me
+        -h 8088
+        -s 8043
