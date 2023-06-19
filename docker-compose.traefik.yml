@@ -40,7 +40,7 @@ services:
       traefik.enable: "true"
       traefik.http.routers.broker-template.entrypoints: "web"
       traefik.http.routers.broker-template.rule: "Host(`broker-template.localtest.me`)"
-      traefik.http.services.broker-template.loadbalancer.server.port: "1883"
+      traefik.http.services.broker-template.loadbalancer.server.port: "8088"
     environment:
       GATEWAY_SYSTEM_NAME: broker-template
     networks:
