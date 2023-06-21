@@ -18,7 +18,7 @@ ___
     ```sh
     mkdir <project-name>
     cd <project-name>
-    git clone https://github.com/design-group/iiot-docker-project-template.git .
+    git clone https://github.com/design-group/ignition-iiot-architecture-template.git .
     ```
 
 3. Rename the vscode workspace file to match your project name.
@@ -37,13 +37,21 @@ ___
 	COMPOSE_PROJECT_NAME=<project-name>
 	```
 
-7. If mounting the `workdir` volume on a non-MacOS device, make sure to create the directory first so that it is owned by the user running the container.
+	or if you are using traefik as a reverse proxy, set the `.env` file to:
+
+	```sh
+	COMPOSE_PATH_SEPARATOR=:
+	COMPOSE_FILE=docker-compose.yml:docker-compose.traefik.yml
+	COMPOSE_PROJECT_NAME=<project-name>
+	```
+ 
+8. If mounting the `workdir` volume on a non-MacOS device, make sure to create the directory first so that it is owned by the user running the container.
 
 	```sh
 	mkdir subscriber-data publisher-data
 	```
 
-8. Pull any changes to the docker image and start the container.
+9. Pull any changes to the docker image and start the container.
       
     On Mac:
     
@@ -57,10 +65,15 @@ ___
     docker-compose pull && docker-compose up -d
     ```
 
-9. In a web browser, access the different gateways at the following ports:	
+10. In a web browser, access the different gateways at the following ports:	
 	- Subscriber (Engine): `http://localhost:80`
 	- Publisher (Transmission): `http://localhost:81`
-	- Broker (Distributor): `http://localhost:82` 
+	- Broker (Distributor): `http://localhost:82`
+
+11. If using traefik as a proxy, access the different gateways at the following ports:
+	- Subscriber (Engine): `http://subscriber-template.localtest.me`
+	- Publisher (Transmission): `http://publisher-template.localtest.me`
+	- Broker (Distributor): `http://broker-template.localtest.me`
 
 ___
 
